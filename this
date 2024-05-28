@@ -1,0 +1,82 @@
+
+    var VisualElement = function (id, template, container) { //Базовый класс для всех визуальных элементов системы
+        this.id = id;
+        this.template = $(template);
+        this.container = container || {};
+
+        this.hide = function () {
+            $(this.id).hide();
+            return this;
+        }
+
+        this.show = function () {
+            $(this.id).show();
+            return this;
+        }
+
+        this.element = function(element){
+            if (!element){
+                return $(this.id);
+            }else{
+                return $(this.id).find(element);
+            }
+        }
+
+        this.isVisible = function () {
+            return $(this.id).is(":visible");
+        }
+
+        this.resize = function (width, height) {
+            for (var el in container) {
+                this.container[el].resize(width, height);
+            }
+        }
+
+        this.height = function (height) {
+            return $(this.id).height(height);
+        }
+
+        this.width = function (width) {
+            return $(this.id).width(width);
+        }
+
+        this.empty = function () {
+            $(this.id).empty();
+            this.container = {};
+            return this;
+        }
+
+        this.click = function (delegate) {
+            if (!delegate) {
+                $(this.id).click();
+            } else {
+                $(this.id).unbind().click(delegate);
+            }
+        }
+
+        this.toggle = function (actionOne, actionTwo) {
+            if (!actionOne) {
+                $(this.id).toggle();
+            } else {
+                $(this.id).unbind().toggle(actionOne, actionTwo);
+            }
+        }
+
+        this.add = function (component) {
+            for (var el in component) {
+                this.container[el] = component[el];
+                if (!(this.container[el] instanceof VisualElement)) throw "container is not Element type";
+                this.container[el].appendTo(this.id);
+            }
+        }
+
+        this.appendTo = function (parent) {
+            if (template != undefined){
+                $(parent).append(this.template)
+            }else{
+                $(parent).append(this.id)
+            }
+            return this;
+        }
+    }
+
